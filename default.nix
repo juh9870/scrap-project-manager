@@ -4,13 +4,9 @@ pkgs.stdenv.mkDerivation rec {
   pname = "scrap-project-manager";
   version = "1.0";
 
-  src =
-    ./.; # Assumes your source files, including index.nu, are in the current directory
+  src = ./.;
 
-  buildInputs = with pkgs;
-    [
-      nushell # Add nushell as a build input to ensure it's available for your app
-    ];
+  buildInputs = with pkgs; [ nushell gum ];
 
   installPhase = ''
     mkdir -p $out/bin
