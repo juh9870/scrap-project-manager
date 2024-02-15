@@ -33,9 +33,9 @@ def menu [projects: string] {
     loop {
         match ([
             "Open project",
-            "New Project",
-            "Exit",
-        ] | choose "Select an action (esc to exit)") {
+            "Add Project",
+            $"Exit",
+        ] | choose $"(ansi cyan_bold)Select an action \(esc to exit)(ansi reset)") {
             0 => (open_project $projects)
             1 => (add_project $projects)
             2 => (exit 0)
@@ -50,7 +50,7 @@ def open_project [projects_path: string] {
         print $"(ansi yellow)No known projects, please add some first(ansi reset)"
         return
     }
-    let proj = $projects | each {|it| [$"($it.name)" "    " $"(ansi dark_gray)($it.path)(ansi reset)"]} | align | choose "Select a project (esc to go back)"
+    let proj = $projects | each {|it| [$"($it.name)" "    " $"(ansi dark_gray)($it.path)(ansi reset)"]} | align | choose $"(ansi cyan_bold)Select a project \(esc to go back)(ansi reset)"
     if $proj == null {
         print $CANCELED
         return
@@ -123,6 +123,7 @@ def open_folder [path: string] {
 }
 
 def add_project [projects_path: string] {
+    print $"(ansi cyan_bold)Select project directory(ansi reset)"
     let selection = ^gum file --file=0 --directory | complete
     if $selection.exit_code != 0 {
         print $CANCELED
@@ -156,6 +157,14 @@ def add_project [projects_path: string] {
 export def main [
     --projects (-p): string = "~/.scrap_project_manager.json" # Path to the projects.json
 ] {
+    print ("
+    ███████╗ ██████╗██████╗  █████╗ ██████╗     ██████╗ ███╗   ███╗
+    ██╔════╝██╔════╝██╔══██╗██╔══██╗██╔══██╗    ██╔══██╗████╗ ████║
+    ███████╗██║     ██████╔╝███████║██████╔╝    ██████╔╝██╔████╔██║
+    ╚════██║██║     ██╔══██╗██╔══██║██╔═══╝     ██╔═══╝ ██║╚██╔╝██║
+    ███████║╚██████╗██║  ██║██║  ██║██║         ██║     ██║ ╚═╝ ██║
+    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝         ╚═╝     ╚═╝     ╚═╝
+    " | str trim | lines | str trim)
     if (glob $projects | length) == 0 {
         [] | save $projects
     }
