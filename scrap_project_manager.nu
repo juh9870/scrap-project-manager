@@ -63,7 +63,7 @@ def open_project [projects_path: string] {
 
 def detect_ide [path: string] {
     cd $path
-    if ("Cargo.nix" | path exists) { # Rust
+    if ("Cargo.toml" | path exists) { # Rust
         $"clion ($path)"
     } else if ("package.json" | path exists) { # NodeJS
         $"webstorm ($path)"
